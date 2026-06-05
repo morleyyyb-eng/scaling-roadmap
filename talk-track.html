@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scaling.com — Talk Track V7.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#1B1B1B;
+    --ink:#1B1B1B;
+    --muted:#6B6B6B;
+    --line:#E5E2DA;
+    --gold:#CCBA78;
+    --gold-soft:#E2D3A2;
+    --gold-bg:#F6F0DF;
+    --paper:#FFFFFF;
+    --offwhite:#FAF8F3;
+    --note-bg:#F2EFE8;
+    --serif:"Playfair Display","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:"Inter","Acumin Pro","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{padding-bottom:120px}
+
+  /* ===== Sticky bar ===== */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:saturate(140%) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:880px;margin:0 auto;padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .brand{font-family:var(--sans);font-weight:700;letter-spacing:.18em;font-size:13px;color:var(--gold)}
+  .brand .sep{color:var(--line);margin:0 10px}
+  .brand .doc{color:var(--ink);font-weight:600;letter-spacing:.06em}
+
+  .toggle{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink);font-weight:500;user-select:none}
+  .toggle label{cursor:pointer}
+  .switch{position:relative;width:44px;height:24px;background:#D8D4C8;border-radius:999px;transition:background .2s;cursor:pointer}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .switch.on{background:var(--gold)}
+  .switch.on::after{transform:translateX(20px)}
+
+  /* ===== Page nav ===== */
+  .stepnav{
+    max-width:880px;margin:0 auto;padding:10px 28px 14px;
+    display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);
+  }
+  .stepnav a{
+    font-size:12px;letter-spacing:.04em;color:var(--muted);text-decoration:none;
+    padding:5px 9px;border:1px solid transparent;border-radius:3px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .stepnav a:hover{color:var(--ink);border-color:var(--line);background:var(--offwhite)}
+
+  /* ===== Layout ===== */
+  main{max-width:780px;margin:0 auto;padding:0 28px}
+
+  /* ===== Title page ===== */
+  .titlepage{padding:96px 0 64px;text-align:center;border-bottom:1px solid var(--line);margin-bottom:48px}
+  .titlepage .kicker{font-family:var(--sans);font-weight:700;letter-spacing:.2em;color:var(--gold);font-size:15px;margin-bottom:18px}
+  .titlepage h1{font-family:var(--serif);font-weight:700;font-size:72px;line-height:1;margin:0 0 18px;letter-spacing:-.01em}
+  .titlepage .ver{font-family:var(--sans);font-weight:400;color:var(--muted);font-size:18px;letter-spacing:.04em}
+  .titlepage .rule{width:520px;max-width:80%;height:1px;background:var(--gold);margin:36px auto}
+  .titlepage .meta{color:var(--muted);font-size:14px;line-height:2}
+
+  /* ===== Sections / Steps ===== */
+  section.step{padding:48px 0;border-top:1px solid var(--line)}
+  section.step:first-of-type{border-top:none}
+
+  .step-tag{
+    display:inline-block;background:var(--gold);color:#fff;
+    font-size:11px;font-weight:700;letter-spacing:.18em;
+    padding:5px 10px;border-radius:2px;margin-bottom:22px;
+  }
+  h2.step-title{
+    font-family:var(--serif);font-weight:700;
+    font-size:44px;line-height:1.08;margin:0 0 12px;letter-spacing:-.01em;
+  }
+  p.subhead{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    color:var(--ink);font-size:18px;margin:0 0 28px;
+  }
+  .rule-gold{height:1px;background:var(--gold);margin:0 0 30px;width:100%}
+
+  h3{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.25;margin:34px 0 14px;letter-spacing:-.005em}
+  h4{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.02em;margin:24px 0 10px;color:var(--ink)}
+  p{margin:0 0 14px}
+  ul{padding-left:22px;margin:6px 0 16px}
+  li{margin:5px 0}
+
+  /* Script blocks (what to say) — gold left rule, italic */
+  .script{
+    border-left:3px solid var(--gold);
+    padding:6px 0 6px 18px;
+    margin:14px 0;
+    font-style:italic;color:var(--ink);
+  }
+  .script p{margin:0 0 8px}
+  .script p:last-child{margin-bottom:0}
+
+  /* Instructional gold block (e.g. "Go two to three layers...") */
+  .instruct{
+    border-left:3px solid var(--gold);
+    padding:8px 0 8px 18px;margin:14px 0;
+    font-style:italic;font-weight:600;
+  }
+
+  /* Coaching note + Pro tip — toggleable */
+  .note{
+    background:var(--note-bg);
+    border-radius:3px;
+    padding:14px 18px;
+    margin:14px 0;
+    font-size:14.5px;line-height:1.55;color:#333;
+  }
+  .note .label{font-weight:700;letter-spacing:.04em;color:var(--ink);margin-right:6px}
+  .note.pro .label{color:#9A8742}
+
+  /* Toggle off: hide coaching notes AND study-only context */
+  body.coach-off .note,
+  body.coach-off .study-only{display:none}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:14.5px}
+  thead th{
+    background:var(--gold);color:#fff;text-align:left;
+    font-family:var(--sans);font-weight:700;letter-spacing:.02em;
+    padding:10px 14px;border:1px solid var(--gold);
+  }
+  tbody td{
+    padding:11px 14px;border:1px solid var(--line);
+    vertical-align:top;background:#fff;
+  }
+  tbody tr:nth-child(even) td{background:var(--offwhite)}
+
+  /* Inline emphasis */
+  strong{font-weight:700}
+  em{font-style:italic}
+  .arrow{font-weight:600}
+
+  /* Track headers (Step 8 A/B) */
+  .track-head{
+    font-family:var(--serif);font-weight:700;
+    color:var(--gold);font-size:22px;letter-spacing:.02em;
+    margin:30px 0 8px;
+  }
+
+  /* Quick Reference */
+  section.qrc h2.step-title{font-size:40px}
+  .qrc-block{margin:22px 0}
+  .qrc-num{
+    display:inline-block;background:var(--gold);color:#fff;
+    width:22px;height:22px;line-height:22px;text-align:center;
+    border-radius:2px;font-size:12px;font-weight:700;margin-right:10px;vertical-align:2px;
+  }
+  .qrc-h{font-family:var(--serif);font-weight:700;font-size:22px;display:inline-block;margin:0}
+  .qrc-block ul{margin-top:8px}
+
+  /* Footer */
+  footer{
+    max-width:780px;margin:80px auto 0;padding:32px 28px;
+    border-top:1px solid var(--line);color:var(--muted);font-size:13px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  }
+
+  /* Small screens */
+  @media (max-width:640px){
+    .topbar-inner{padding:12px 18px}
+    main{padding:0 18px}
+    .titlepage{padding:64px 0 40px}
+    .titlepage h1{font-size:48px}
+    h2.step-title{font-size:32px}
+    .brand .doc{display:none}
+    table{font-size:13.5px}
+    thead th, tbody td{padding:9px 10px}
+  }
+
+  /* Print */
+  @media print{
+    .topbar,.stepnav,footer{display:none}
+    body{padding:0}
+    section.step{page-break-inside:avoid;padding:24px 0;border-top:1px solid #ccc}
+    .note{background:#f4f1e9 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    thead th{background:#CCBA78 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">SCALING.COM<span class="sep">/</span><span class="doc">Talk Track V7.0</span></div>
+    <div class="toggle">
+      <label for="coachToggle">Coaching tips</label>
+      <div id="coachToggle" class="switch on" role="switch" aria-checked="true" tabindex="0"></div>
+    </div>
+  </div>
+  <nav class="stepnav" aria-label="Steps">
+    <a href="#step1">1 · Before the Call</a>
+    <a href="#step2">2 · Warm-Up</a>
+    <a href="#step3">3 · Agenda Frame</a>
+    <a href="#step4">4 · Discovery</a>
+    <a href="#step5">5 · Info Confirmation</a>
+    <a href="#step6">6 · Pitch</a>
+    <a href="#step7">7 · Trial Close</a>
+    <a href="#step8">8 · Close &amp; Enrollment</a>
+    <a href="#qrc">Quick Reference</a>
+  </nav>
+</div>
+
+<main>
+
+  <!-- ===== Title ===== -->
+  <header class="titlepage">
+    <div class="kicker">SCALING.COM</div>
+    <h1>Talk Track</h1>
+    <div class="ver">V7.0</div>
+    <div class="rule"></div>
+    <div class="meta">
+      Enrollment Team — Confidential<br>
+      March 2026
+    </div>
+  </header>
+
+  <!-- ===== STEP 1 ===== -->
+  <section class="step" id="step1">
+    <span class="step-tag">STEP 1</span>
+    <h2 class="step-title">Before the Call</h2>
+    <p class="subhead">Know your lead.</p>
+    <div class="rule-gold"></div>
+
+    <h3 class="study-only">Lead Type Cheat Sheet</h3>
+    <p class="study-only"><strong>Check the CRM before every call. Know who you're talking to.</strong></p>
+    <table class="study-only">
+      <thead><tr><th>Lead Type</th><th>How You Know</th><th>What Changes</th></tr></thead>
+      <tbody>
+        <tr><td>Inbound Scheduled</td><td>Booked directly from ad, landing page, or book funnel</td><td>Full process. This is the default.</td></tr>
+        <tr><td>Virtual Event/Book Challenge Lead</td><td>Registered for or attended a live webinar/event</td><td>Gauge buying temperature early. If bought in &rarr; light discovery &rarr; close. If not &rarr; full process.</td></tr>
+        <tr><td>Setter-Set (S2C)</td><td>A setter booked the call</td><td>Anchor back to setter call: "I reviewed the notes from your call with [setter name]..." Targeted discovery, not a full redo.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Your Job Before the Call</h3>
+    <p class="study-only">Once the confirmation team connects you with a lead, two things matter:</p>
+    <ul class="study-only">
+      <li><strong>1.</strong> Review the CRM notes.</li>
+    </ul>
+    <p class="study-only">Know their name, their business, what the confirmation team gathered. Walk in informed — not cold.</p>
+    <ul class="study-only">
+      <li><strong>2.</strong> Make contact and set the tone.</li>
+    </ul>
+    <div class="script">
+      <p>"Hey [Name], this is [Rep].  I'll be the one on your enrollment meeting on [day]. Really looking forward to it. I took a look at [their company] and I'm excited to dig into where you're headed. If there's anything you'd like me to know ahead of time, feel free to shoot it over."</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>A lead who has had a real interaction with you before the call shows up at dramatically higher rates than one who only received automated messages.</div>
+
+    <h3>Day-Before Touch</h3>
+    <div class="script">
+      <p>"Hey [Name], it's [Enrolment specialist name] at <u>scaling.com</u>.<br>
+      (Separate texts)<br>
+      Quick question before our call today at [time]: how long have you been running [company]?"</p>
+    </div>
+    <p><em>Once they respond, follow with:</em></p>
+    <div class="script">
+      <p>"Awesome, we actually have a few of those in the program. Looking forward to diving in today and seeing if it's a good fit. See you at [time]!"</p>
+    </div>
+
+    <h3 class="study-only">Prep Yourself</h3>
+    <ul class="study-only">
+      <li>Review the CRM notes one more time</li>
+      <li>Know which lead type you're dealing with (cheat sheet above)</li>
+      <li>Get your energy right… even 2 minutes of conversation with a teammate helps you warm up</li>
+    </ul>
+
+    <h3 class="study-only">Key Principles — Step 1</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>The sale starts before the call</td><td>Don't wait for the Zoom to open. Your first message is your first impression.</td></tr>
+        <tr><td>Know your lead type</td><td>Inbound, event, or setter-set — each one gets a slightly different approach.</td></tr>
+        <tr><td>Come prepared</td><td>Review CRM notes, check their business, know their name. Walk in warm.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 2 ===== -->
+  <section class="step" id="step2">
+    <span class="step-tag">STEP 2</span>
+    <h2 class="step-title">The Warm-Up</h2>
+    <p class="subhead">First 60–90 seconds. Build rapport.</p>
+    <div class="rule-gold"></div>
+
+    <div class="note"><span class="label">COACHING NOTE:</span>Like &rarr; Listen &rarr; Believe &rarr; Buy. That's the progression. If they don't like you, they won't listen. If they don't listen, they won't believe. If they don't believe, they won't buy. The warm-up is where "like" happens.</div>
+
+    <h3>2A. Open with warmth</h3>
+    <div class="script">
+      <p>"Hey [Name]! How's it going? Thanks for hopping on — I've been looking forward to this."</p>
+    </div>
+    <p class="study-only">Then find something to connect on:</p>
+    <ul class="study-only">
+      <li>Where they're located — react to it, find common ground</li>
+      <li>Their business — "I was checking out [company] — how'd you get into that?"</li>
+      <li>Something visible on Zoom — office setup, background, anything real</li>
+    </ul>
+    <div class="note"><span class="label">COACHING NOTE:</span>This is elicitation, not interrogation. You're making an observation that naturally causes them to volunteer information.</div>
+
+    <h3 class="study-only">2B. Build commonality</h3>
+    <p class="study-only">Scan for things you share in common. Same state, same hobby, same type of business. Point it out when you find it. Commonality = trust shortcut.</p>
+    <p class="study-only"><strong>2–3 minutes max. Don't let this stretch past 3 minutes.</strong></p>
+
+    <h3>2C. Identify the decision maker</h3>
+    <div class="script">
+      <p>"Are you the main decision maker on something like this, or is there a partner or spouse who'd want to be part of the conversation?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>This is easy to miss and expensive to skip. If there's a spouse or business partner who needs to weigh in, you need to know NOW.</div>
+
+    <h3>2D. Time check</h3>
+    <div class="script">
+      <p>"Before we dive in — do you have a hard stop today, or are we good on time?"</p>
+    </div>
+
+    <h3 class="study-only">Key Principles — Step 2</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Like &rarr; Listen &rarr; Believe &rarr; Buy</td><td>They have to like you first. Everything else follows.</td></tr>
+        <tr><td>Ask, don't tell</td><td>Let them talk about themselves.</td></tr>
+        <tr><td>Elicitation &gt; Interrogation</td><td>Make observations that invite responses. Don't fire off questions.</td></tr>
+        <tr><td>Find common ground</td><td>Shared experiences = instant trust. Point it out when you find it.</td></tr>
+        <tr><td>Surface the decision maker early</td><td>Partner or spouse involved? Find out now, not at the close.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 3 ===== -->
+  <section class="step" id="step3">
+    <span class="step-tag">STEP 3</span>
+    <h2 class="step-title">Agenda Frame</h2>
+    <p class="subhead">Set expectations. Gain permission. Plant the decision seed.</p>
+    <div class="rule-gold"></div>
+
+    <div class="note"><span class="label">COACHING NOTE:</span>The brain is wired to want to know what's coming next. When someone doesn't know what to expect, their brain shifts into survival mode. The agenda frame removes the unknown so they can relax and engage.</div>
+
+    <h3>3A. Introduce your role and frame the call</h3>
+    <div class="script">
+      <p>"Well [Name], thanks for taking the time to be here. I'm excited for this conversation. Let me give you a quick idea of how this works so we're on the same page.</p>
+      <p>I'm an enrollment specialist here at Scaling.com. I work closely with Dr. Hardy and Blake Erickson, and my role is really to take the time to understand you, your business, and where you're looking to go, and then figure out together if this is genuinely a good fit.</p>
+      <p>Because honestly, it's pretty black and white. Either you're looking to grow linearly, or you're looking to truly go for scale. We like to say that we're not a country club. We want to bring in the right entrepreneurs who are ready to go for 10x, and we take that seriously.</p>
+      <p>So what I'd love to do is start by diving into your journey up to this point, what's been working, what you'd want more of, and where the gaps are. From there, we usually get a pretty good understanding of whether this is a real fit. If it is, I'd be happy to walk you through what next steps look like. And if it's not, we'll take a few steps back and see what would need to align for this to be an effective partnership moving forward.</p>
+      <p>Does that sound okay?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>This opening establishes authority, frames YOU as the evaluator, sets the "not a country club" tone, lays out the call structure, establishes indifference, and ends with your first micro-close.</div>
+
+    <h3>3B. Cast the broad net</h3>
+    <div class="script">
+      <p>"Most business owners I talk with land here for one of three reasons. They've been doing really well but they've hit a ceiling and feel stuck. They're looking to step back or eventually exit but can't seem to get the business past themselves. Or they're seeing a lot of momentum, they have big goals, and they just haven't found the right pathway to get there yet. Which of those sounds most like you, or is it something completely different?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>The prospect self-selects into a category (discovery starting point), it normalizes their situation, and even if none fit, they'll correct you with their real reason.</div>
+
+    <h3>3C. Where they came from &amp; what outcome they are looking for?</h3>
+    <div class="script">
+      <p>"I always like to ask: How'd you first hear about us?<br>
+      - Mastermind?<br>
+      - Fan of Dr. Hardy?<br>
+      - Recent event?</p>
+    </div>
+    <div class="instruct">
+      Go two to three layers on this question. It's important for data reasons. For example, if they said they heard about the book "The Science of Scaling" from a mastermind, then ask which mastermind, where they're located, who started the mastermind, etc.
+    </div>
+
+    <h3 class="study-only">Key Principles — Step 3</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Remove the unknown</td><td>Tell them what's coming so their brain can relax and engage.</td></tr>
+        <tr><td>You're the evaluator, not the seller</td><td>You're figuring out if THEY'RE a fit — not begging for a sale.</td></tr>
+        <tr><td>"We're not a country club"</td><td>Sets the tone. This is serious. Not everyone gets in.</td></tr>
+        <tr><td>Indifference is magnetic</td><td>When you don't need the sale, they lean in.</td></tr>
+        <tr><td>The broad net never fails</td><td>Plateau, exit, or scale — they self-select or correct you.</td></tr>
+        <tr><td>Every "sound good?" is a micro-close</td><td>You're stacking small agreements from the very first minute.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 4 ===== -->
+  <section class="step" id="step4">
+    <span class="step-tag">STEP 4</span>
+    <h2 class="step-title">Discovery — Identify the Gap</h2>
+    <p class="subhead">Current state &rarr; Desired state &rarr; What's in the way. This is where deals are won or lost.</p>
+    <div class="rule-gold"></div>
+
+    <div class="note"><span class="label">COACHING NOTE:</span>Discovery is the most important step in the entire sales process. If you nail discovery, closing is easy. If you rush it, you'll fight for every deal. Your job: understand (1) where they are now, (2) where they want to be, (3) what's in the way. The distance between 1 and 2 is the gap.</div>
+
+    <p class="study-only"><strong>Two rules that never bend:</strong></p>
+    <ul class="study-only">
+      <li>No solution giving. Acknowledge problems. Save solutions for the pitch.</li>
+      <li>No selfish discovery. Demonstrate expertise and create light-bulb moments IN the discovery.</li>
+    </ul>
+    <p class="study-only"><strong>15–25 minutes. Discovery should be the longest portion of your call.</strong></p>
+
+    <h3>4A. Probing — What brought them here?</h3>
+    <div class="script">
+      <p>"So you said you're feeling [their broad net answer]. Tell me more about that — what's going on in the business right now?"</p>
+      <p>"Was there a specific moment or event that made you say, 'Okay, I need to look into this'? A line-in-the-sand moment?"</p>
+    </div>
+
+    <h3>4B. Situational — Where are they, and where are they going?</h3>
+    <div class="script">
+      <p>"Give me the lay of the land. What does the business look like right now — revenue, team size, how long you've been at it?"</p>
+      <p>"And where are you trying to take this? What's the goal?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Don't project goals onto them. Ask what THEIR goal is.</div>
+
+    <h3>4C. Gap awareness — What's keeping them from getting there?</h3>
+    <div class="script">
+      <p>"So you're at [current state] and you want to get to [desired state]. What do you feel like is standing in the way?"</p>
+      <p>"If you had to point to the one thing that's holding the business back the most, what would it be?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Their words fall into two categories: Logistical/tactical ("We need more leads") and Emotional ("I feel stuck"). Write down both. Circle the emotional ones — that's where the deal gets made.</div>
+
+    <h3>Digging Past Tactical to Emotional — Cheat Sheet</h3>
+    <table>
+      <thead><tr><th>They say (tactical)</th><th>What's underneath (emotional)</th><th>How to dig</th></tr></thead>
+      <tbody>
+        <tr><td>"We need to grow"</td><td>Why? Scared? Proving something? Building toward an exit?</td><td>"What's the big push for growth right now?"</td></tr>
+        <tr><td>"We need more revenue"</td><td>Bleeding? Business at risk? Family depending on it?</td><td>"How come it's not covering what you need?"</td></tr>
+        <tr><td>"I want to scale"</td><td>Scale for what? Freedom? Legacy? To sell?</td><td>"What does it look like on the other side of scaling?"</td></tr>
+        <tr><td>"We need better systems"</td><td>Drowning? 80-hour weeks? Missing their kids' lives?</td><td>"What's it costing you right now NOT having those systems?"</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4D. Identify the buying driver — Pain or Goal?</h3>
+    <p><strong>If pain is dominant (stressed, frustrated, stuck):</strong></p>
+    <div class="script">
+      <p>"What kind of problems is this creating for you?"</p>
+      <p>"What happens if nothing changes in the next 12 months?"</p>
+    </div>
+    <p><strong>If goal is dominant (ambitious, excited, forward-looking):</strong></p>
+    <div class="script">
+      <p>"What would hitting that goal actually mean for you — beyond the number?"</p>
+      <p>"How would your life change if you got there?"</p>
+    </div>
+
+    <h3>4E. Solution awareness — What have they tried?</h3>
+    <div class="script">
+      <p>"Have you ever worked with a coach or a program before? What was that experience like?"</p>
+      <p>"What would make this time different for you?"</p>
+    </div>
+
+    <h3 class="study-only">4F. Techniques that separate good from great</h3>
+    <p class="study-only"><strong>Repeat their last 5 words.</strong></p>
+    <p class="study-only">When you don't know where to go next, repeat the last thing they said and pause. They will elaborate every time.</p>
+    <p class="study-only"><strong>The Rule of 3: Question &rarr; Label &rarr; Elicitation.</strong></p>
+    <p class="study-only">Ask a question. Label the emotion you hear. Then make a statement designed to get them to correct you.</p>
+
+    <h3 class="study-only">4G. What NOT to do</h3>
+    <table class="study-only">
+      <thead><tr><th>Mistake</th><th>Why It Kills the Deal</th></tr></thead>
+      <tbody>
+        <tr><td>Solution giving</td><td>You just removed their reason to stay on the call.</td></tr>
+        <tr><td>Selfish discovery</td><td>20 minutes of questions where they learn nothing = resistance.</td></tr>
+        <tr><td>Stacking questions</td><td>Never ask two questions in a row. One at a time.</td></tr>
+        <tr><td>Making assumptions</td><td>If you don't know, ASK.</td></tr>
+        <tr><td>Staying on the surface</td><td>"We need more revenue" is a branch. The root is underneath.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Discovery Extras</h3>
+    <p><strong>Compliance &rarr; Commitment gradient</strong></p>
+    <div class="script">
+      <p>"Are you even open to working with someone on this?" (compliance — easy yes)</p>
+      <p>"Could you see yourself working hand-in-hand with a strategist?" (commitment — more specific)</p>
+      <p>"Are you more fact-finding right now, or have you reached a point where this is a real priority?" (trial close — forces a real answer)</p>
+    </div>
+    <p><strong>Courtroom control — redirect language</strong></p>
+    <div class="script">
+      <p>"That's a great point — I want to come back to that. But first, let me ask you..."</p>
+      <p>"I appreciate you sharing that. Let's bookmark it — I think it'll make more sense once I show you how we work."</p>
+    </div>
+
+    <h3 class="study-only">Key Principles — Step 4</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Discovery feeds everything</td><td>Your pitch, your close, your follow-up — all built on what you learn here.</td></tr>
+        <tr><td>If they say it, it's gospel</td><td>Their words carry more weight than yours ever will.</td></tr>
+        <tr><td>Pain or Goal — know the driver</td><td>The dominant buying driver changes your entire approach.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 5 ===== -->
+  <section class="step" id="step5">
+    <span class="step-tag">STEP 5</span>
+    <h2 class="step-title">Information Confirmation</h2>
+    <p class="subhead">Prove you listened. Expand the gap. Bridge to the pitch.</p>
+    <div class="rule-gold"></div>
+
+    <div class="note"><span class="label">COACHING NOTE:</span>This is the bridge between discovery and pitching. If done properly, the sale is roughly 70% made before you ever show the offer.</div>
+
+    <h3>5A. Recap what you heard</h3>
+    <div class="script">
+      <p>"So let me make sure I've got this right. You're at [revenue/stage], you've been at this for [X years], and right now the big thing is [their core challenge]. You want to get to [their goal], and the main thing standing in the way is [their gap]. Does that capture it, or is there anything I'm missing?"</p>
+    </div>
+
+    <h3>5B. Add "hot sauce" — expand the gap</h3>
+    <p class="study-only">Don't just repeat what they said. Reflect it back with the full emotional weight.</p>
+    <p class="study-only"><em>What they said: "I can't generate leads and it's been a huge headache."</em></p>
+    <div class="script">
+      <p>"You said something that stuck with me — that one of the things keeping you up at night has been the fact that you can't generate leads consistently, and without that, the revenue can't grow the way you need it to."</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Once they confirm this version, it becomes an obligatory statement — their words, in their voice.</div>
+
+    <h3>5C. Soft trial close</h3>
+    <div class="script">
+      <p>"Based on everything we've talked about — if I could show you a program that specifically addresses [their gap] and helps you get to [their goal], is that something you'd want to see?"</p>
+    </div>
+
+    <h3>5D. Bridge to pitch</h3>
+    <div class="script">
+      <p>"You've named some things that really stand out. I'm going to go over what we do and specifically how we work with business owners on exactly these kinds of challenges — and honestly, some of what you've shared is right in our wheelhouse. Let me walk you through it."</p>
+    </div>
+
+    <h3 class="study-only">Key Principles — Step 5</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Sum it up simply</td><td>Recap their situation, goal, and gap. Show you were paying attention.</td></tr>
+        <tr><td>Their words become their truth</td><td>Once they confirm the amplified version, it's locked in.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 6 ===== -->
+  <section class="step" id="step6">
+    <span class="step-tag">STEP 6</span>
+    <h2 class="step-title">Pitch Personalization — Story, Pitch, Pillars</h2>
+    <p class="subhead">Make them feel like this was built for them.</p>
+    <div class="rule-gold"></div>
+
+    <div class="note"><span class="label">COACHING NOTE:</span>Three parts, every time: Story &rarr; Pitch &rarr; Pillars. Personalize everything to what they told you in discovery. Eliminate I, Me, Mine — third-party credibility always.</div>
+
+    <h3>6A. Story — The Scaling.com existence narrative</h3>
+    <div class="script">
+      <p>"Let me give you some quick background on how this all came together.</p>
+      <p>Dr. Ben Hardy spent years researching what separates businesses that scale from the ones that stay stuck. Real research, real data, published work. Blake Erickson was on the other side — a real operator who built, scaled, and sold businesses.</p>
+      <p>They came together because they realized most business owners aren't missing effort or ambition. They're missing the framework, the right strategy, and someone in their corner who's already been where they're trying to go.</p>
+      <p>That's why Scaling.com exists — Frame, Floor, Focus. Sound familiar?"</p>
+    </div>
+
+    <h3>6B. Power Pillars</h3>
+    <p class="study-only"><strong>Personalize each pillar to their discovery. After each one, get them talking.</strong></p>
+
+    <h4>PILLAR 1: One-on-One Scaling Strategist</h4>
+    <ul>
+      <li>Dedicated strategist who knows their business, numbers, and goals</li>
+      <li>24/7 access — text, email, WhatsApp</li>
+      <li>Bi-weekly 1 hour strategy sessions + unlimited supplemental calls</li>
+    </ul>
+
+    <h4>PILLAR 2: The Community</h4>
+    <ul>
+      <li>Over 500 members — $1M to over a billion in revenue</li>
+      <li>Direct access to Dr. Hardy and Blake on live group coaching</li>
+      <li>A network of operators who've solved the problems they're working through</li>
+    </ul>
+
+    <h4>PILLAR 3: The Scaling Portal</h4>
+    <ul>
+      <li>Scaler AI trained on Hardy's frameworks and thousands of hours of conversations</li>
+      <li>Full content library, community feed, member directory, progress dashboard</li>
+      <li>All coaching recordings saved — nothing gets lost</li>
+    </ul>
+
+    <h4>PILLAR 4: Live Events</h4>
+    <ul>
+      <li>In-person events at world-class venues</li>
+      <li>World-class speakers</li>
+      <li>Relationships built at events often worth more than anything else</li>
+    </ul>
+
+    <h3>6C. The Tie-Back &amp; Investment Anchor</h3>
+    <div class="script">
+      <p>"So that's the full picture — strategist with 24/7 access, the community, the Scaling Portal and AI, and live events.</p>
+      <p>The investment is [Price] for the year paid in full — that's what most of our members do because it saves you [X]. But there's also the option of [Price] a month for 12 months.</p>
+      <p>What parts of all this do you feel like are going to be the highest leverage for where you're at right now?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>End by getting them to sell it back to you. When they tell you which parts matter most, their brain is programming itself for the decision.</div>
+
+    <h3 class="study-only">Key Principles — Step 6</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Personalize to discovery</td><td>Their words, their problems, their goals — woven into every pillar.</td></tr>
+        <tr><td>Eliminate I, Me, Mine</td><td>Third-party credibility. Reference clients at the next tier up.</td></tr>
+        <tr><td>Don't sell features — sell access</td><td>What does it DO for them? Not what does it INCLUDE.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 7 ===== -->
+  <section class="step" id="step7">
+    <span class="step-tag">STEP 7</span>
+    <h2 class="step-title">Trial Close &amp; Investment</h2>
+    <p class="subhead">Take their temperature. Stack commitments. Drop the number. Let the silence work.</p>
+    <div class="rule-gold"></div>
+
+    <div class="note"><span class="label">COACHING NOTE:</span>If you've executed Steps 1-6 well, the close should be the easiest part of the call.</div>
+
+    <h3>7A. Temperature check — scale of 1 to 10</h3>
+    <div class="script">
+      <p>"Before we go any further, I just want to get a quick read on where you're at. On a scale of 1 to 10 — 1 being 'this was a total waste of my time' and 10 being 'this is exactly what I've been looking for' — where would you put yourself?"</p>
+    </div>
+
+    <h3>7B. Justification — make them sell it back to you</h3>
+    <p><strong>If they're a 7, 8, 9, or 10:</strong></p>
+    <div class="script">
+      <p>"That's great to hear. What specifically is resonating with you that you'd rate yourself that high?"</p>
+    </div>
+    <p><strong>If they're below a 7:</strong></p>
+    <div class="script">
+      <p>"Okay — what would have to change for you to say 10?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>When they tell you what resonated, their subconscious hears them say it. If THEY say it, it's gospel.</div>
+
+    <h3>7C. Isolate to the investment</h3>
+    <div class="script">
+      <p>"So other than the actual investment itself — is there anything else that would stop you from getting started?"</p>
+    </div>
+
+    <h3>7D. Commitment question — lock it in</h3>
+    <div class="script">
+      <p>"So what I'm hearing is — if the investment makes sense for where you're at, you're ready to get started. Is that right?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Compliance was "yeah, this sounds good." Agreement was "I can see how this would help." Commitment is "yes, if the money works, I'm in." That's a fundamentally different answer.</div>
+
+    <h3>7E. The investment conversation</h3>
+    <div class="script">
+      <p>"Like I mentioned — the investment is [Price] for the year paid in full. That's what most of our members do because it saves [X]. There's also the option of [Price] a month for 12 months."</p>
+    </div>
+    <p><strong>Then stop talking.</strong></p>
+
+    <h3>7F. Reading the response</h3>
+    <p><strong>If they're ready:</strong> Move directly to Step 8. Don't sell past the close.</p>
+    <p><strong>If they have questions:</strong> Answer directly, then re-close:</p>
+    <div class="script">
+      <p>"Does that answer your question? Any other concerns before we move forward?"</p>
+    </div>
+
+    <h3>7G. The doubt/reversal technique</h3>
+    <div class="script">
+      <p>"Hey — I could be totally off here, but it seems like maybe something shifted. Are we still on the same page, or is there something I'm missing?"</p>
+    </div>
+
+    <h3>7H. "The truth is easy"</h3>
+    <div class="note"><span class="label">COACHING NOTE:</span>Real answers come fast. When answers get hard, something's hidden.</div>
+    <div class="script">
+      <p>"When you say you need to think about it — is there something specific, or is it more of a general feeling?"</p>
+      <p>"If you woke up tomorrow and knew 100% this was the right move, what would still need to happen between now and then?"</p>
+    </div>
+
+    <h3>7I. Walk away after 4-5 loops</h3>
+    <div class="script">
+      <p>"Look — I can tell this is something you're taking seriously, and I respect that. I don't want to push you into something that doesn't feel right. Here's what I'd suggest..."</p>
+    </div>
+
+    <h3 class="study-only">Key Principles — Step 7</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Compliance &ne; Commitment</td><td>"Sounds good" is compliance. "I'm ready to start" is commitment.</td></tr>
+        <tr><td>Make them sell it to themselves</td><td>When they justify their rating, their brain programs itself for the decision.</td></tr>
+        <tr><td>Isolate before you close</td><td>Narrow it to one variable before asking for commitment.</td></tr>
+        <tr><td>Silence is a closer's friend</td><td>Drop the number, stop talking. First to speak has the pressure.</td></tr>
+        <tr><td>The truth is easy</td><td>Real answers come fast. Hesitation means something's hidden.</td></tr>
+        <tr><td>If you feel it, say it</td><td>Name it when something feels off.</td></tr>
+        <tr><td>Don't sell past the close</td><td>If they're ready, stop talking and start enrolling.</td></tr>
+        <tr><td>Walk away with dignity</td><td>After 3-4 loops, respect the no.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== STEP 8 ===== -->
+  <section class="step" id="step8">
+    <span class="step-tag">STEP 8</span>
+    <h2 class="step-title">Close &amp; Enrollment</h2>
+    <p class="subhead">Walk them through the membership agreement &amp; payment. Lock in the follow-up if needed.</p>
+    <div class="rule-gold"></div>
+
+    <div class="track-head">TRACK A: They're Ready — Enroll</div>
+    <div class="rule-gold"></div>
+
+    <h3>8A. Assume the close</h3>
+    <div class="script">
+      <p>"Awesome — let's get you set up. Next steps are super simple. We're going to get you on the Scaling Portal — everything I just showed you, all the incredible features there. But the most important thing: we're going to assign you your strategist in the next 24 hours and schedule that first strategy call within the next 7 days. Sound good?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Lead with what they GET, not what they SIGN. The agreement is just process.</div>
+
+    <h3>8B. Agreement walkthrough — on the call</h3>
+    <div class="script">
+      <p>"Cool — I'm going to send over the membership agreement to your email right now. It'll take about 60 seconds to come through."</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Do NOT just send the agreement and hope they sign it later. The agreement happens ON the call.</div>
+
+    <h3>8C. Get them set up — stay on the call</h3>
+    <div class="script">
+      <p>"I'll be right here on the call to help you through everything and get you enrolled and onboarded so that you have access to everything. I just want to make sure you get set up in the Scaling Portal and you get the link to schedule your first strategy call in the next week or so."</p>
+      <p>"Go ahead and pull that up — it should be in your inbox now. I'll be right here if you have any questions as you go through it."</p>
+    </div>
+    <div class="note pro"><span class="label">PRO TIP:</span>While they're reading the agreement, casually say you're going to grab a quick sip of water or top off your glass. Takes the awkwardness out of the silence.</div>
+
+    <h3>8D. Ask for a referral</h3>
+    <div class="script">
+      <p>"This is going to be a great partnership. One more thing — do you know anyone else in your world who's in a similar spot? Someone who's scaling a business and could benefit from the same kind of support? We get a lot of our best members through referrals from people like you."</p>
+    </div>
+
+    <div class="track-head">TRACK B: They're Not Ready — Follow-Up Locking System</div>
+    <div class="rule-gold"></div>
+
+    <h3>8E. Qualify the follow-up</h3>
+    <div class="note"><span class="label">COACHING NOTE:</span>A follow-up is only valid with a genuine, specific logistical reason they cannot move forward today. "I need to think about it" is not a reason — it's an avoidance mechanism.</div>
+    <p><strong>Before you set a follow-up, you must have clear answers to:</strong></p>
+    <ul>
+      <li><strong>1.</strong> What is their buying motive? (from discovery — should be crystal clear)</li>
+      <li><strong>2.</strong> What is the specific reason they can't move forward today?</li>
+      <li><strong>3.</strong> Is this reason resolvable, and when?</li>
+    </ul>
+    <div class="script">
+      <p>"I totally respect that. When are you going to connect with [partner]?"</p>
+      <p>"If [partner] gives the green light, are we good to go?"</p>
+    </div>
+
+    <h3>8F. Between-call touch</h3>
+    <p>Day before the follow-up call:</p>
+    <div class="script">
+      <p>"Hey [Name] — we've got our call tomorrow at [time]. I know you were going to [their specific action]. How did that go?"</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Reference the specific thing they said they'd do. If you nailed down specifics on the call, you have something real to ask about. If not, you're stuck sending "just checking in" — and that's when you get ghosted.</div>
+
+    <h3>8G. ICC Objection Framework — Isolate, Clarify, Counsel</h3>
+    <p><strong>I — Isolate: What exactly is the concern?</strong></p>
+    <div class="script">
+      <p>"Help me understand — when you say [their objection], what specifically do you mean by that?"</p>
+      <p>"Is that the only thing holding you back, or is there something else too?"</p>
+    </div>
+    <p><strong>C — Clarify: Get the full picture before you respond.</strong></p>
+    <div class="script">
+      <p>"So if I'm hearing you right, the concern is [restate it]. Is that accurate?"</p>
+      <p>"And if we could address that — would everything else be a green light?"</p>
+    </div>
+    <p><strong>C — Counsel: Now — and only now — address it.</strong></p>
+    <div class="script">
+      <p>"I appreciate you being upfront about that. Here's what I'd say..."</p>
+    </div>
+    <div class="note"><span class="label">COACHING NOTE:</span>Most reps jump straight to Counsel. Don't solve the objection until you fully understand it.</div>
+
+    <h3>8H. Common objections — specific language</h3>
+    <p><strong>"I need to think about it."</strong></p>
+    <div class="script">
+      <p>"I respect that. Can I ask — what specifically are you wanting to think through? Is it the investment, whether this is the right fit, or something else?"</p>
+    </div>
+    <p><strong>"I need to talk to my partner/spouse."</strong></p>
+    <div class="script">
+      <p>"Totally get that. Help me understand: does your partner know you're exploring this? How do they feel about you investing in the business this way?"</p>
+      <p>"If your partner gives the green light — are we all in?"</p>
+    </div>
+    <p><strong>"It's too expensive."</strong></p>
+    <div class="script">
+      <p>"I hear you. Let me ask — is it that the investment doesn't make sense for the value, or is it more of a cash flow timing thing?"</p>
+    </div>
+    <p><strong>"I've been burned by coaching before."</strong></p>
+    <div class="script">
+      <p>"I'm sorry to hear that. What happened? What was missing?"</p>
+      <p>"What would make this time different for you?"</p>
+    </div>
+    <p><strong>"The timing isn't right."</strong></p>
+    <div class="script">
+      <p>"I understand. Help me out — when you say the timing isn't right, is there something specific that needs to happen first?"</p>
+    </div>
+
+    <h3>8I. Walk away after 4-5 loops</h3>
+    <div class="script">
+      <p>"I respect where you're at. I've given you everything I can — and I think you know whether this is the right move for you. I'm not going to push you into something. If you decide this is what you want, I'm here. Just reach out."</p>
+    </div>
+
+    <h3 class="study-only">Key Principles — Step 8</h3>
+    <table class="study-only">
+      <thead><tr><th>Principle</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Lead with what they GET, not what they SIGN</td><td>Portal, strategist, first call — then the agreement.</td></tr>
+        <tr><td><strong>Sign on the call</strong></td><td><strong>Walk them through the agreement live. Don't send and hope.</strong></td></tr>
+        <tr><td>Only valid follow-ups have specific reasons</td><td>Vague = ghosting. Specific = closeable.</td></tr>
+        <tr><td>ICC: Isolate &rarr; Clarify &rarr; Counsel</td><td>Don't solve the objection until you fully understand it.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== QUICK REFERENCE ===== -->
+  <section class="step qrc" id="qrc">
+    <span class="step-tag">QUICK REFERENCE CARD</span>
+    <h2 class="step-title">Quick Reference Card</h2>
+    <p class="subhead">Print this. Keep it next to your screen. Glance — don't read.</p>
+    <div class="rule-gold"></div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">1</span><h3 class="qrc-h">Before the Call</h3>
+      <ul>
+        <li>Check CRM — know the lead type (Inbound / Book Challenge/Event / S2C)</li>
+        <li>Send a personal outreach message before the call</li>
+        <li>Review CRM notes.</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">2</span><h3 class="qrc-h">The Warm-Up</h3>
+      <ul>
+        <li>Open with warmth</li>
+        <li>Elicitation, not interrogation — comment on something, let them talk</li>
+        <li>Surface the decision maker: "Are you the main decision maker?"</li>
+        <li>Time check: "Do you have a hard stop today?"</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">3</span><h3 class="qrc-h">Agenda Frame</h3>
+      <ul>
+        <li>Introduce your role</li>
+        <li>"We're not a country club." You're the buyer, not the seller.</li>
+        <li>Broad net: Plateau / Exit / Scale — "Which sounds most like you?"</li>
+        <li>Qualify on intention, not if they've read the book or not.</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">4</span><h3 class="qrc-h">Discovery — Identify the Gap</h3>
+      <ul>
+        <li>Where are they now? Where do they want to be? What's in the way?</li>
+        <li>Dig past tactical to emotional… circle the emotional words.</li>
+        <li>No solution giving. One question at a time. 15-25 minutes.</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">5</span><h3 class="qrc-h">Information Confirmation</h3>
+      <ul>
+        <li>Recap: situation, goal, gap</li>
+        <li>Add "hot sauce" — reflect with full emotional weight</li>
+        <li>"If I could show you a program that addresses [gap]..."</li>
+        <li>Bridge: "Some of what you've shared is right in our wheelhouse."</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">6</span><h3 class="qrc-h">Pitch Personalization</h3>
+      <ul>
+        <li>Story &rarr; Pitch &rarr; Pillars — personalize each to discovery</li>
+        <li>4 Pillars: Strategist / Community / Portal / Events</li>
+        <li>"What parts do you feel are highest leverage for you?"</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">7</span><h3 class="qrc-h">Trial Close &amp; Investment</h3>
+      <ul>
+        <li>Make them justify: "What specifically is resonating with you?"</li>
+        <li>Isolate: "Other than the investment — anything else stopping you?"</li>
+        <li>Dynamic silence after the number. First to speak has the pressure.</li>
+      </ul>
+    </div>
+
+    <div class="qrc-block">
+      <span class="qrc-num">8</span><h3 class="qrc-h">Close &amp; Enrollment</h3>
+      <ul>
+        <li>If ready: Assume the close — lead with what they GET, sign on the call</li>
+        <li>If not ready: Qualify the follow-up — must be a specific reason</li>
+        <li>Objections &rarr; ICC: Isolate &rarr; Clarify &rarr; Counsel</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>Scaling.com Talk Track V7.0 — Enrollment Team — Confidential</div>
+  <div>March 2026</div>
+</footer>
+
+<script>
+  (function(){
+    var sw = document.getElementById('coachToggle');
+    var body = document.body;
+    var KEY = 'talktrack:coach';
+
+    function setState(on){
+      if(on){ sw.classList.add('on'); sw.setAttribute('aria-checked','true'); body.classList.remove('coach-off'); }
+      else  { sw.classList.remove('on'); sw.setAttribute('aria-checked','false'); body.classList.add('coach-off'); }
+      try{ localStorage.setItem(KEY, on ? '1':'0'); }catch(e){}
+    }
+    function toggle(){ setState(!sw.classList.contains('on')); }
+
+    var saved = null;
+    try{ saved = localStorage.getItem(KEY); }catch(e){}
+    setState(saved === null ? true : saved === '1');
+
+    sw.addEventListener('click', toggle);
+    sw.addEventListener('keydown', function(e){
+      if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggle(); }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if(e.key === 'c' || e.key === 'C'){ toggle(); }
+    });
+
+    // smooth scroll for nav
+    document.querySelectorAll('.stepnav a').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href').slice(1);
+        var el = document.getElementById(id);
+        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); history.replaceState(null,'','#'+id); }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
